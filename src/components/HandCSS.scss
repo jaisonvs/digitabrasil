@@ -1,0 +1,290 @@
+// Variáveis SCSS
+$hand-color: rgba(222, 100, 19, 0.816);
+$hand-shadow: rgba(0, 0, 0, 0.3);
+$border-color: rgba(60, 60, 60, 0.7);
+$active-color: rgba(100, 149, 237, 0.9);
+$transition-time: 0.3s;
+
+// Mixins
+@mixin hand-gradient($opacity: 0.7) {
+  background: radial-gradient(
+    circle at 50% 20%, 
+    rgba(222, 100, 19, $opacity), 
+    rgba(222, 100, 19, $opacity * 0.8)
+  );
+}
+
+@mixin finger-base {
+  position: absolute;
+  @include hand-gradient;
+  border-radius: 20px 20px 16px 16px;
+  transition: transform $transition-time ease;
+  box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.1);
+}
+
+@mixin active-state {
+  @include hand-gradient(1.0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.2) translateY(-10px);
+  z-index: 2;
+}
+
+// Container principal
+.hands-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 60px;
+  min-height: 200px;
+  position: relative;
+  margin-top: -190px;
+  z-index: 50;
+  padding: 0 20px;
+}
+
+// Mão base
+.hand {
+  position: relative;
+  width: 160px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: floatHand 3s infinite ease-in-out;
+
+  &.left-hand {
+    left: -40px;
+    transform: scaleX(-1) scale(1.4);
+    animation: floatHandLeft 3s infinite ease-in-out;
+    margin-right: 60px;
+  }
+
+  &.right-hand {
+    right: 70px;
+    transform: scale(1.4);
+    animation: floatHandRight 3s infinite ease-in-out;
+    margin-left: 60px;
+  }
+}
+
+// Palma da mão
+.palm {
+  width: 75px;
+  height: 70px;
+  @include hand-gradient;
+  border-radius: 60% 35% 45% 55% / 60% 70% 60% 80%;
+  position: relative;
+  box-shadow: 
+    0 3px 8px rgba(181, 41, 41, 0.3),
+    inset 0 8px 18px rgba(255, 255, 255, 0.10),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.10);
+}
+
+// Polegar
+.thumb {
+  width: 14px;
+  height: 25px;
+  @include hand-gradient;
+  border-radius: 0px 2px 10px 0px;
+  position: absolute;
+  left: -3px;
+  top: -15px;
+  transform: rotate(-40deg) rotateX(50deg);
+  box-shadow: 0 1px 3px $hand-shadow;
+  transition: transform $transition-time ease;
+
+  &.active {
+    @include active-state;
+    transform: scale(1.2) translateY(-10px) rotate(-40deg) rotateX(50deg);
+  }
+}
+
+// Dedo base
+.finger {
+  @include finger-base;
+  margin-top: 10px;
+
+  // Posicionamento específico dos dedos
+  &.f1 {
+    left: -5px;
+    top: -30px;
+    transform: rotateX(15deg) rotateZ(-20deg);
+    width: 15px;
+    height: 30px;
+    @include hand-gradient(0.7);
+
+    &::before {
+      content: '';
+      width: 13px;
+      height: 20px;
+      position: absolute;
+      @include hand-gradient(0.7);
+      border-radius: 20px;
+      bottom: 18%;
+      right: 65%;
+      left: 13px;
+      top: 1px;
+      transform-origin: calc(100% - 20px) 20px;
+      transform: rotate(-60deg);
+      transition: transform $transition-time ease;
+      box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      @include active-state;
+      transform: scale(1.2) translateY(-10px) rotateX(15deg) rotateZ(-7deg);
+    }
+  }
+
+  &.f2 {
+    left: 20px;
+    top: -40px;
+    transform: rotateX(15deg) rotateZ(-1deg);
+    width: 16px;
+    height: 30px;
+    @include hand-gradient(0.7);
+
+    &::before {
+      content: '';
+      width: 14px;
+      height: 20px;
+      position: absolute;
+      @include hand-gradient(0.7);
+      border-radius: 20px;
+      bottom: 18%;
+      right: 65%;
+      left: 13px;
+      top: 1px;
+      transform-origin: calc(100% - 20px) 20px;
+      transform: rotate(-60deg);
+      transition: transform $transition-time ease;
+      box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      @include active-state;
+      transform: scale(1.2) translateY(-10px) rotateX(15deg) rotateZ(-1deg);
+    }
+  }
+
+  &.f3 {
+    left: 45px;
+    top: -40px;
+    transform: rotateX(15deg) rotateZ(5deg);
+    width: 15.5px;
+    height: 30px;
+    @include hand-gradient(0.7);
+
+    &::before {
+      content: '';
+      width: 14.0px;
+      height: 20px;
+      position: absolute;
+      @include hand-gradient(0.7);
+      border-radius: 20px;
+      bottom: 18%;
+      right: 65%;
+      left: 13px;
+      top: 1px;
+      transform-origin: calc(100% - 20px) 20px;
+      transform: rotate(-60deg);
+      transition: transform $transition-time ease;
+      box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      @include active-state;
+      transform: scale(1.2) translateY(-10px) rotateX(15deg) rotateZ(10deg);
+    }
+  }
+
+  &.f4 {
+    left: 70px;
+    top: -25px;
+    transform: rotateX(15deg) rotateZ(20deg);
+    width: 14px;
+    height: 25px;
+    @include hand-gradient(0.7);
+
+    &::before {
+      content: '';
+      width: 12px;
+      height: 20px;
+      position: absolute;
+      @include hand-gradient(0.7);
+      border-radius: 20px;
+      bottom: 18%;
+      right: 65%;
+      left: 13px;
+      top: 1px;
+      transform-origin: calc(100% - 20px) 20px;
+      transform: rotate(-60deg);
+      transition: transform $transition-time ease;
+      box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      @include active-state;
+      transform: scale(1.2) translateY(-10px) rotateX(15deg) rotateZ(20deg);
+    }
+  }
+}
+
+// Estados ativos específicos para mãos esquerda e direita
+.left-hand {
+  .thumb {
+    left: -20px;
+    right: auto;
+    top: 30px;
+    transform: rotate(-40deg) rotateX(10deg);
+    border-radius: 13px 30px 20px 2px;
+    box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.1);
+
+    &.active {
+      transform: scale(1.2) translateY(-10px) rotate(-40deg) rotateX(10deg) scaleX(-1);
+    }
+  }
+}
+
+.right-hand {
+  .thumb {
+    left: -20px;
+    right: auto;
+    top: 30px;
+    transform: rotate(-40deg) rotateX(10deg);
+    border-radius: 13px 30px 20px 2px;
+    box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.1);
+
+    &.active {
+      transform: scale(1.2) translateY(-10px) rotate(-40deg) rotateX(10deg);
+    }
+  }
+}
+
+// Animações
+@keyframes floatHand {
+  0%, 100% {
+    transform: translateY(0px) scale(1.4);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.4);
+  }
+}
+
+@keyframes floatHandLeft {
+  0%, 100% {
+    transform: translateY(0px) scaleX(-1) scale(1.4);
+  }
+  50% {
+    transform: translateY(-5px) scaleX(-1) scale(1.4);
+  }
+}
+
+@keyframes floatHandRight {
+  0%, 100% {
+    transform: translateY(0px) scale(1.4);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.4);
+  }
+} 

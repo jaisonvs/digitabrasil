@@ -1,0 +1,315 @@
+.realistic-hands-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+  transform: scale(0.9);
+}
+
+.realistic-hand {
+  position: absolute;
+  width: 200px;
+  height: 120px;
+  transform-origin: center bottom;
+  animation: handFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+}
+
+.left-hand {
+  animation-delay: 0s;
+}
+
+.right-hand {
+  animation-delay: 1.5s;
+}
+
+/* Palma da mão */
+.palm {
+  position: absolute;
+  bottom: 0;
+  width: 90px;
+  height: 65px;
+  background: radial-gradient(ellipse at 60% 60%, #f4d03f 60%, #f39c12 100%);
+  border-radius: 50px 50px 30px 30px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10), 0 1px 2px #fff inset;
+}
+
+.left-palm {
+  left: 60px;
+}
+
+.right-palm {
+  right: 60px;
+}
+
+/* Polegar */
+.thumb {
+  position: absolute;
+  width: 32px;
+  height: 55px;
+  background: radial-gradient(ellipse at 60% 60%, #f4d03f 60%, #f39c12 100%);
+  border-radius: 18px 18px 16px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 1px 2px #fff inset;
+}
+
+.left-thumb {
+  left: 38px;
+  bottom: 18px;
+  transform: rotate(38deg);
+}
+
+.right-thumb {
+  right: 38px;
+  bottom: 18px;
+  transform: rotate(-38deg);
+}
+
+/* Dedos realistas */
+.realistic-finger {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(.4,1.4,.6,1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.10));
+}
+
+.realistic-finger.active {
+  animation: fingerPress 0.5s ease;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.18));
+}
+
+.finger-base {
+  width: 26px;
+  height: 32px;
+  background: radial-gradient(ellipse at 60% 60%, var(--finger-color, #f4d03f) 60%, #f39c12 100%);
+  border-radius: 15px 15px 12px 12px;
+  margin-bottom: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 1px 2px #fff inset;
+}
+
+.finger-middle {
+  width: 22px;
+  height: 26px;
+  background: radial-gradient(ellipse at 60% 60%, var(--finger-color, #f4d03f) 60%, #f39c12 100%);
+  border-radius: 12px 12px 10px 10px;
+  margin-bottom: 2px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 1px 2px #fff inset;
+}
+
+.finger-tip {
+  width: 18px;
+  height: 20px;
+  background: radial-gradient(ellipse at 60% 60%, var(--finger-color, #f4d03f) 60%, #f39c12 100%);
+  border-radius: 10px 10px 8px 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 1px 2px #fff inset;
+}
+
+.finger-nail {
+  width: 13px;
+  height: 8px;
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-radius: 6px 6px 2px 2px;
+  margin-top: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* Posicionamento dos dedos da mão esquerda */
+.left-hand .realistic-finger:nth-child(4) { left: 18px; transform: rotate(-18deg); }
+.left-hand .realistic-finger:nth-child(5) { left: 48px; transform: rotate(-8deg); }
+.left-hand .realistic-finger:nth-child(6) { left: 78px; transform: rotate(-2deg); }
+.left-hand .realistic-finger:nth-child(7) { left: 108px; transform: rotate(4deg); }
+
+/* Posicionamento dos dedos da mão direita */
+.right-hand .realistic-finger:nth-child(4) { right: 108px; transform: rotate(-4deg); }
+.right-hand .realistic-finger:nth-child(5) { right: 78px; transform: rotate(-2deg); }
+.right-hand .realistic-finger:nth-child(6) { right: 48px; transform: rotate(8deg); }
+.right-hand .realistic-finger:nth-child(7) { right: 18px; transform: rotate(18deg); }
+
+/* Sombra das mãos */
+.hands-shadow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(1.2);
+  width: 320px;
+  height: 28px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(7px);
+  opacity: 0.7;
+}
+
+/* Indicador de tecla atual */
+.current-key-indicator {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  animation: keyIndicatorPulse 1s ease-in-out infinite;
+}
+
+.key-highlight {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  margin-bottom: 0.5rem;
+}
+
+.key-arrow {
+  font-size: 1.5rem;
+  color: #667eea;
+  animation: arrowBounce 1s ease-in-out infinite;
+}
+
+/* Animações */
+@keyframes handFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--rotation, 0deg));
+  }
+  50% {
+    transform: translateY(-5px) rotate(var(--rotation, 0deg));
+  }
+}
+
+@keyframes fingerPress {
+  0% {
+    transform: translateY(0px) rotate(var(--rotation, 0deg));
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--rotation, 0deg)) scale(1.1);
+  }
+  100% {
+    transform: translateY(0px) rotate(var(--rotation, 0deg));
+  }
+}
+
+@keyframes keyIndicatorPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Efeitos de destaque para dedos ativos */
+.realistic-finger.active .finger-tip {
+  background: var(--finger-color);
+  box-shadow: 
+    0 0 10px var(--finger-color),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.5),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.realistic-finger.active .finger-nail {
+  background: linear-gradient(135deg, #fff 0%, var(--finger-color) 100%);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .realistic-hand {
+    width: 150px;
+    height: 90px;
+  }
+  
+  .palm {
+    width: 60px;
+    height: 45px;
+  }
+  
+  .finger-base {
+    width: 15px;
+    height: 20px;
+  }
+  
+  .finger-middle {
+    width: 13px;
+    height: 15px;
+  }
+  
+  .finger-tip {
+    width: 12px;
+    height: 14px;
+  }
+  
+  .finger-nail {
+    width: 8px;
+    height: 6px;
+  }
+  
+  .thumb {
+    width: 18px;
+    height: 35px;
+  }
+  
+  .hands-shadow {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .realistic-hand {
+    width: 120px;
+    height: 70px;
+  }
+  
+  .palm {
+    width: 50px;
+    height: 35px;
+  }
+  
+  .finger-base {
+    width: 12px;
+    height: 16px;
+  }
+  
+  .finger-middle {
+    width: 10px;
+    height: 12px;
+  }
+  
+  .finger-tip {
+    width: 9px;
+    height: 11px;
+  }
+  
+  .finger-nail {
+    width: 6px;
+    height: 4px;
+  }
+  
+  .thumb {
+    width: 15px;
+    height: 28px;
+  }
+  
+  .hands-shadow {
+    width: 150px;
+  }
+  
+  .key-highlight {
+    font-size: 1rem;
+    padding: 0.3rem 0.8rem;
+  }
+} 
