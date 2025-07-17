@@ -3,11 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
-        - cd digitacao-site
         - npm ci --cache .npm --prefer-offline
     build:
       commands:
-        - cd digitacao-site
         - npm run build
   artifacts:
     baseDirectory: digitacao-site/build
@@ -15,5 +13,5 @@ frontend:
       - '**/*'
   cache:
     paths:
-      - digitacao-site/node_modules/**/*
-      - digitacao-site/.npm/**/*
+      - node_modules/**/*
+      - .npm/**/*
