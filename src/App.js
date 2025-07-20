@@ -6,6 +6,7 @@ import TypingExercise from './components/TypingExercise';
 import PostureTips from './components/PostureTips';
 import Footer from './components/Footer';
 import ThemeToggle from './components/ThemeToggle';
+import SoundControl from './components/SoundControl';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -26,6 +27,7 @@ function App() {
   return (
     <div className="App">
       <ThemeToggle />
+      <SoundControl />
       <Header currentPage={currentPage} onPageChange={setCurrentPage} />
       <main className="main-content">
         {renderPage()}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './TypingExercise.css';
 import HandCSS from './HandCSS';
 import VirtualKeyboard from './VirtualKeyboard';
+import soundManager from './SoundManager';
 
 const TypingExercise = () => {
   const [text, setText] = useState('');
@@ -41,6 +42,7 @@ const TypingExercise = () => {
     setCurrentKey('');
     setActiveFinger('');
     inputRef.current.focus();
+    soundManager.playSound('special');
   };
 
   const getFingerForKey = (key) => {
@@ -74,10 +76,25 @@ const TypingExercise = () => {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
+    const previousLength = userInput.length;
     setUserInput(value);
 
     if (!isTyping && value.length > 0) {
       startTyping();
+    }
+
+    // Reproduzir som baseado no tipo de entrada
+    if (value.length > previousLength) {
+      // Verificar se é um erro
+      const currentIndex = previousLength;
+      if (currentIndex < text.length && value[currentIndex] !== text[currentIndex]) {
+        soundManager.playSound('error');
+      } else {
+        soundManager.playSound('key');
+      }
+    } else if (value.length < previousLength) {
+      // Backspace ou delete
+      soundManager.playSound('special');
     }
 
     // Mostrar dedo para a próxima letra do texto
@@ -113,11 +130,18 @@ const TypingExercise = () => {
       setShowResults(true);
       setCurrentKey('');
       setActiveFinger('');
+      soundManager.playSound('complete');
     }
   };
 
   const handleKeyDown = (e) => {
     if (showResults) return;
+    
+    // Reproduzir som para teclas especiais
+    const specialKeys = ['Enter', 'Backspace', 'Tab', 'Shift', 'Control', 'Alt', 'Meta'];
+    if (specialKeys.includes(e.key)) {
+      soundManager.playSound('special');
+    }
     
     // Mostrar posição do dedo para a próxima letra do texto
     if (userInput.length < text.length) {
@@ -188,31 +212,27 @@ const TypingExercise = () => {
   };
 
   function getActiveFinger(side, finger) {
-    // Mapeamento dos nomes dos dedos para cada mão
-    const map = {
-      left: {
-        'left-pinky': 'f4',
-        'left-ring': 'f3',
-        'left-middle': 'f2',
-        'left-index': 'f1',
-        'thumbs': 'thumb',
-      },
-      right: {
-        'right-index': 'f1',
-        'right-middle': 'f2',
-        'right-ring': 'f3',
-        'right-pinky': 'f4',
-        'thumbs': 'thumb',
-      },
+    if (!finger) return '';
+    
+    const fingerMap = {
+      'left-pinky': side === 'left' ? 'pinky' : '',
+      'left-ring': side === 'left' ? 'ring' : '',
+      'left-middle': side === 'left' ? 'middle' : '',
+      'left-index': side === 'left' ? 'index' : '',
+      'right-pinky': side === 'right' ? 'pinky' : '',
+      'right-ring': side === 'right' ? 'ring' : '',
+      'right-middle': side === 'right' ? 'middle' : '',
+      'right-index': side === 'right' ? 'index' : '',
+      'thumbs': side === 'left' ? 'thumb' : ''
     };
-    return map[side][finger] || '';
+    
+    return fingerMap[finger] || '';
   }
 
   const getInputClassName = () => {
     let className = 'typing-input';
     
     if (userInput.length > 0) {
-      // Verificar se há erros no texto digitado
       let hasErrors = false;
       for (let i = 0; i < userInput.length; i++) {
         if (userInput[i] !== text[i]) {
@@ -231,146 +251,286 @@ const TypingExercise = () => {
     return className;
   };
 
-  return (
+    return (
     <div className="typing-exercise">
-      <div className="exercise-container">
-        <h1>Exercício de Digitação</h1>
-        
-        <div className="stats-bar">
-          <div className="stat">
-            <span className="stat-label">Velocidade:</span>
-            <span className="stat-value">{isTyping ? '...' : wpm} WPM</span>
-          </div>
-          <div className="stat">
-            <span className="stat-label">Precisão:</span>
-            <span className="stat-value">{accuracy}%</span>
-          </div>
-          <div className="stat">
-            <span className="stat-label">Erros:</span>
-            <span className="stat-value">{errors}</span>
-          </div>
-          <div className="stat">
-            <span className="stat-label">Tempo:</span>
-            <span className="stat-value">
-              {isTyping ? '...' : startTime ? Math.round((endTime - startTime) / 1000) : 0}s
-            </span>
-          </div>
-        </div>
-
-        <div className="text-display">
-          <p className="text-content">
-            {renderText()}
-          </p>
-        </div>
-
-        <div className="typing-area">
-          <div className="input-section">
-            <div className="progress-indicator">
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
-                  style={{ width: `${(userInput.length / text.length) * 100}%` }}
-                ></div>
+      <h1 className="exercise-title">Exercício de Digitação</h1>
+      
+      <div className="main-layout">
+        <div className="exercise-content">
+          <div className="stats-bar">
+              <div className="stat">
+                <div className="stat-icon">⚡</div>
+                <span className="stat-label">Velocidade</span>
+                <span className="stat-value">
+                  {isTyping ? (
+                    <span className="typing-indicator">...</span>
+                  ) : (
+                    `${wpm} WPM`
+                  )}
+                </span>
+                {wpm > 0 && (
+                  <div className="stat-trend">
+                    {wpm >= 60 ? '🚀' : wpm >= 40 ? '👍' : wpm >= 20 ? '📈' : '🔄'}
+                  </div>
+                )}
               </div>
-              <span className="progress-text">
-                {userInput.length} / {text.length} caracteres
-              </span>
+              
+              <div className="stat">
+                <div className="stat-icon">🎯</div>
+                <span className="stat-label">Precisão</span>
+                <span className="stat-value">{accuracy}%</span>
+                {accuracy > 0 && (
+                  <div className="stat-trend">
+                    {accuracy >= 95 ? '🏆' : accuracy >= 90 ? '👍' : accuracy >= 80 ? '📈' : '⚠️'}
+                  </div>
+                )}
+              </div>
+              
+              <div className="stat">
+                <div className="stat-icon">❌</div>
+                <span className="stat-label">Erros</span>
+                <span className="stat-value">{errors}</span>
+                {errors > 0 && (
+                  <div className="stat-trend">
+                    {errors <= 2 ? '🟢' : errors <= 5 ? '🟡' : '🔴'}
+                  </div>
+                )}
+              </div>
+              
+              <div className="stat">
+                <div className="stat-icon">⏱️</div>
+                <span className="stat-label">Tempo</span>
+                <span className="stat-value">
+                  {isTyping ? (
+                    <span className="typing-indicator">...</span>
+                  ) : (
+                    `${startTime ? Math.round((endTime - startTime) / 1000) : 0}s`
+                  )}
+                </span>
+                {startTime && !isTyping && (
+                  <div className="stat-trend">
+                    {Math.round((endTime - startTime) / 1000) <= 60 ? '⚡' : '⏳'}
+                  </div>
+                )}
+              </div>
+              
+              <div className="stat">
+                <div className="stat-icon">📊</div>
+                <span className="stat-label">CPM</span>
+                <span className="stat-value">
+                  {isTyping ? (
+                    <span className="typing-indicator">...</span>
+                  ) : (
+                    `${startTime ? Math.round((userInput.length / ((endTime - startTime) / 1000)) * 60) : 0}`
+                  )}
+                </span>
+              </div>
             </div>
-            <textarea
-              ref={inputRef}
-              value={userInput}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              onKeyUp={handleKeyUp}
-              placeholder="✨ Digite o texto acima para começar o exercício..."
-              disabled={showResults}
-              className={getInputClassName()}
-              spellCheck="false"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-            />
-          </div>
-        </div>
 
-        {/* Teclado dentro do exercise-container */}
-        <div className="keyboard-visual-section">
-          <VirtualKeyboard currentKey={currentKey} />
-        </div>
-
-        {/* Mãos logo abaixo do teclado */}
-        <div className="hands-row">
-          <HandCSS side="left" activeFinger={getActiveFinger('left', activeFinger)} />
-          <HandCSS side="right" activeFinger={getActiveFinger('right', activeFinger)} />
-        </div>
-
-        <div className="controls">
-          {!isTyping && !showResults && (
-            <button onClick={startTyping} className="start-button">
-              Começar Exercício
-            </button>
-          )}
-          
-          {showResults && (
-            <div className="results">
-              <h2>Resultados</h2>
-              <div className="results-grid">
-                <div className="result-item">
-                  <span className="result-label">Velocidade:</span>
-                  <span className="result-value">{wpm} WPM</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Precisão:</span>
-                  <span className="result-value">{accuracy}%</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Erros:</span>
-                  <span className="result-value">{errors}</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Tempo:</span>
-                  <span className="result-value">{Math.round((endTime - startTime) / 1000)}s</span>
+            <div className="progress-indicator">
+              <div className="progress-header">
+                <div className="progress-stats">
+                  <div className="stat-item">
+                    <span className="stat-icon">📝</span>
+                    <span className="stat-value">{userInput.length}</span>
+                    <span className="stat-label">Digitados</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-icon">📊</span>
+                    <span className="stat-value">{text.length}</span>
+                    <span className="stat-label">Total</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-icon">📈</span>
+                    <span className="stat-value">{Math.round((userInput.length / text.length) * 100)}%</span>
+                    <span className="stat-label">Progresso</span>
+                  </div>
                 </div>
               </div>
               
-              <div className="result-feedback">
-                {wpm >= 60 && accuracy >= 95 && (
-                  <p className="excellent">Excelente! Você está no nível avançado!</p>
-                )}
-                {wpm >= 40 && accuracy >= 90 && (
-                  <p className="good">Muito bom! Continue praticando!</p>
-                )}
-                {wpm >= 20 && accuracy >= 80 && (
-                  <p className="average">Bom começo! Pratique mais para melhorar.</p>
-                )}
-                {(wpm < 20 || accuracy < 80) && (
-                  <p className="needs-improvement">Continue praticando! A consistência é a chave.</p>
+              <div className="progress-bar-container">
+                <div className="progress-bar">
+                  <div 
+                    className="progress-fill" 
+                    style={{ width: `${(userInput.length / text.length) * 100}%` }}
+                  ></div>
+                  <div className="progress-glow"></div>
+                </div>
+                <div className="progress-labels">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                </div>
+              </div>
+              
+              <div className="progress-details">
+                <div className="detail-item">
+                  <span className="detail-icon">⚡</span>
+                  <span className="detail-text">
+                    {isTyping ? 'Digitando...' : 'Pronto para começar'}
+                  </span>
+                </div>
+                {errors > 0 && (
+                  <div className="detail-item error">
+                    <span className="detail-icon">⚠️</span>
+                    <span className="detail-text">{errors} erro{errors !== 1 ? 's' : ''}</span>
+                  </div>
                 )}
               </div>
             </div>
-          )}
-          
-          <div className="action-buttons">
-            <button onClick={resetExercise} className="reset-button">
-              Reiniciar
-            </button>
-            <button onClick={nextText} className="next-button">
-              Próximo Texto
-            </button>
+
+            <div className="controls">
+              {!isTyping && !showResults && (
+                <button onClick={startTyping} className="start-button">
+                  Começar Exercício
+                </button>
+              )}
+              
+              {showResults && (
+                <div className="results">
+                  <div className="results-header">
+                    <h2>🎉 Resultados do Exercício</h2>
+                    <div className="completion-badge">
+                      <span className="badge-icon">🏆</span>
+                      <span className="badge-text">Concluído!</span>
+                    </div>
+                  </div>
+                  
+                  <div className="results-grid">
+                    <div className="result-item">
+                      <div className="result-icon">⚡</div>
+                      <span className="result-label">Velocidade</span>
+                      <span className="result-value">{wpm} WPM</span>
+                      <div className="result-rating">
+                        {wpm >= 60 ? '🚀 Excelente' : wpm >= 40 ? '👍 Bom' : wpm >= 20 ? '📈 Regular' : '🔄 Continue praticando'}
+                      </div>
+                    </div>
+                    
+                    <div className="result-item">
+                      <div className="result-icon">🎯</div>
+                      <span className="result-label">Precisão</span>
+                      <span className="result-value">{accuracy}%</span>
+                      <div className="result-rating">
+                        {accuracy >= 95 ? '🏆 Perfeito' : accuracy >= 90 ? '👍 Muito bom' : accuracy >= 80 ? '📈 Bom' : '⚠️ Precisa melhorar'}
+                      </div>
+                    </div>
+                    
+                    <div className="result-item">
+                      <div className="result-icon">❌</div>
+                      <span className="result-label">Erros</span>
+                      <span className="result-value">{errors}</span>
+                      <div className="result-rating">
+                        {errors === 0 ? '🎉 Perfeito!' : errors <= 2 ? '🟢 Poucos erros' : errors <= 5 ? '🟡 Alguns erros' : '🔴 Muitos erros'}
+                      </div>
+                    </div>
+                    
+                    <div className="result-item">
+                      <div className="result-icon">⏱️</div>
+                      <span className="result-label">Tempo</span>
+                      <span className="result-value">{Math.round((endTime - startTime) / 1000)}s</span>
+                      <div className="result-rating">
+                        {Math.round((endTime - startTime) / 1000) <= 60 ? '⚡ Rápido' : '⏳ Tempo normal'}
+                      </div>
+                    </div>
+                    
+                    <div className="result-item">
+                      <div className="result-icon">📊</div>
+                      <span className="result-label">CPM</span>
+                      <span className="result-value">
+                        {Math.round((userInput.length / ((endTime - startTime) / 1000)) * 60)}
+                      </span>
+                      <div className="result-rating">
+                        Caracteres por minuto
+                      </div>
+                    </div>
+                    
+                    <div className="result-item">
+                      <div className="result-icon">📈</div>
+                      <span className="result-label">Score</span>
+                      <span className="result-value">
+                        {Math.round((wpm * accuracy / 100) + (100 - errors * 2))}
+                      </span>
+                      <div className="result-rating">
+                        Pontuação geral
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="result-feedback">
+                    {wpm >= 60 && accuracy >= 95 && (
+                      <p className="excellent">Excelente! Você está no nível avançado!</p>
+                    )}
+                    {wpm >= 40 && accuracy >= 90 && (
+                      <p className="good">Muito bom! Continue praticando!</p>
+                    )}
+                    {wpm >= 20 && accuracy >= 80 && (
+                      <p className="average">Bom começo! Pratique mais para melhorar.</p>
+                    )}
+                    {(wpm < 20 || accuracy < 80) && (
+                      <p className="needs-improvement">Continue praticando! A consistência é a chave.</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              <div className="action-buttons">
+                <button onClick={resetExercise} className="reset-button">
+                  Reiniciar
+                </button>
+                <button onClick={nextText} className="next-button">
+                  Próximo Texto
+                </button>
+              </div>
+            </div>
+
+            <div className="tips">
+              <h3>Dicas para melhorar:</h3>
+              <ul>
+                <li>Mantenha os olhos no texto, não no teclado</li>
+                <li>Use todos os dedos das mãos</li>
+                <li>Mantenha uma postura adequada</li>
+                <li>Pratique regularmente</li>
+                <li>Foque na precisão antes da velocidade</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="keyboard-sidebar">
+            <div className="text-display">
+              <p className="text-content">
+                {renderText()}
+              </p>
+            </div>
+
+            <div className="typing-area">
+              <div className="input-section">
+                <textarea
+                  ref={inputRef}
+                  value={userInput}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  onKeyUp={handleKeyUp}
+                  placeholder="✨ Digite o texto acima para começar o exercício..."
+                  disabled={showResults}
+                  className={getInputClassName()}
+                  spellCheck="false"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                />
+              </div>
+            </div>
+
+            <div className="keyboard-visual-section">
+              <VirtualKeyboard currentKey={currentKey} />
+              
+              <div className="hands-row">
+                <HandCSS side="left" activeFinger={getActiveFinger('left', activeFinger)} />
+                <HandCSS side="right" activeFinger={getActiveFinger('right', activeFinger)} />
+              </div>
+            </div>
           </div>
         </div>
-
-        <div className="tips">
-          <h3>Dicas para melhorar:</h3>
-          <ul>
-            <li>Mantenha os olhos no texto, não no teclado</li>
-            <li>Use todos os dedos das mãos</li>
-            <li>Mantenha uma postura adequada</li>
-            <li>Pratique regularmente</li>
-            <li>Foque na precisão antes da velocidade</li>
-          </ul>
-        </div>
-      </div>
     </div>
   );
 };

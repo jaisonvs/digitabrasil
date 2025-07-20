@@ -53,32 +53,6 @@ const Home = ({currentPage, onPageChange}) => {
               <h3>Produtividade</h3>
               <p>Seja mais eficiente em suas tarefas diárias.</p>
             </div>
-          </div>
-        </section>
-
-        <section className="basics-section">
-          <h2>Fundamentos da Digitação</h2>
-          <div className="basics-content">
-            <div className="basics-text">
-              <h3>Posição das Mãos</h3>
-              <p>
-                As mãos devem estar posicionadas na linha base do teclado, com os dedos 
-                indicadores nas teclas <b>F</b> e <b>J</b> (que possuem pequenas saliências para orientação).
-              </p>
-              
-              <h3>Dedos de Referência</h3>
-              <p>
-                Cada dedo é responsável por uma área específica do teclado. Mantenha os 
-                dedos sempre nas suas posições de "casa" e mova apenas o dedo necessário 
-                para cada tecla.
-              </p>
-              
-              <h3>Olhos no Texto</h3>
-              <p>
-                Mantenha os olhos no texto que está digitando, não no teclado. Com a 
-                prática, você desenvolverá a memória muscular necessária.
-              </p>
-            </div>
             <div className="keyboard-image">
               <div className="keyboard-visual">
                 <div className="keyboard-row">
@@ -120,6 +94,33 @@ const Home = ({currentPage, onPageChange}) => {
                 </span>
               </p>
             </div>
+          </div>
+        </section>
+
+        <section className="basics-section">
+          <h2>Fundamentos da Digitação</h2>
+          <div className="basics-content">
+            <div className="basics-text">
+              <h3>Posição das Mãos</h3>
+              <p>
+                As mãos devem estar posicionadas na linha base do teclado, com os dedos 
+                indicadores nas teclas <b>F</b> e <b>J</b> (que possuem pequenas saliências para orientação).
+              </p>
+              
+              <h3>Dedos de Referência</h3>
+              <p>
+                Cada dedo é responsável por uma área específica do teclado. Mantenha os 
+                dedos sempre nas suas posições de "casa" e mova apenas o dedo necessário 
+                para cada tecla.
+              </p>
+              
+              <h3>Olhos no Texto</h3>
+              <p>
+                Mantenha os olhos no texto que está digitando, não no teclado. Com a 
+                prática, você desenvolverá a memória muscular necessária.
+              </p>
+            </div>
+
           </div>
         </section>
 
