@@ -27,7 +27,7 @@ const PostureTips = () => {
           </div>
 
           <div className="tip-card">
-            <div className="tip-icon">⌨️</div>
+            <div className="tip-icon"></div>
             <h3>Posição do Teclado</h3>
             <ul>
               <li>Mantenha o teclado na altura dos cotovelos</li>

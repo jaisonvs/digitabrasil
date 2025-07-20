@@ -273,7 +273,7 @@
 }
 
 .input-section::after {
-  content: '⌨️';
+  content: '';
   position: absolute;
   top: -30px;
   right: 20px;
