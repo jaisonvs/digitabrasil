@@ -265,15 +265,30 @@ const TypingExercise = () => {
 
         <div className="typing-area">
           <div className="input-section">
+            <div className="progress-indicator">
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ width: `${(userInput.length / text.length) * 100}%` }}
+                ></div>
+              </div>
+              <span className="progress-text">
+                {userInput.length} / {text.length} caracteres
+              </span>
+            </div>
             <textarea
               ref={inputRef}
               value={userInput}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               onKeyUp={handleKeyUp}
-              placeholder="Comece a digitar aqui..."
+              placeholder="✨ Digite o texto acima para começar o exercício..."
               disabled={showResults}
               className={getInputClassName()}
+              spellCheck="false"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
             />
           </div>
         </div>

@@ -5,6 +5,7 @@ import Home from './components/Home';
 import TypingExercise from './components/TypingExercise';
 import PostureTips from './components/PostureTips';
 import Footer from './components/Footer';
+import ThemeToggle from './components/ThemeToggle';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <div className="App">
+      <ThemeToggle />
       <Header currentPage={currentPage} onPageChange={setCurrentPage} />
       <main className="main-content">
         {renderPage()}
