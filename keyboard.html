@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Teclado Interativo SVG</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .instructions {
+      text-align: center;
+      color: #666;
+      font-size: 18px;
+    }
+    .key { 
+      fill: #f9f9f9; 
+      stroke: #ccc; 
+      stroke-width: 2; 
+      transition: all 0.1s ease;
+    }
+    .label { 
+      font-size: 16px; 
+      fill: #333; 
+      font-family: Arial, sans-serif; 
+      font-weight: bold;
+      transition: fill 0.1s ease;
+    }
+    .hand { 
+      fill: none; 
+      stroke: #999; 
+      stroke-width: 2; 
+      opacity: 0.6; 
+    }
+    .finger { 
+      fill: none; 
+      stroke: #007bff; 
+      stroke-width: 4; 
+      opacity: 0.8; 
+      transition: all 0.2s ease;
+    }
+    .pressed { 
+      fill: #007bff !important;
+      stroke: #0056b3 !important;
+    }
+    .pressed-text { 
+      fill: white !important; 
+    }
+    .finger.animate {
+      transform: translateY(15px);
+      stroke: #ff6b35;
+      stroke-width: 6;
+    }
+    .key:hover {
+      fill: #e8e8e8;
+      stroke: #999;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="instructions">
+    <h2>Teclado Interativo SVG</h2>
+    <p>Pressione as teclas A, S, D, F, G, H, J, K, L para ver as animações dos dedos!</p>
+  </div>
+
+  <svg id="svg-teclado" width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+    <!-- Teclas -->
+    <g id="teclas" transform="translate(150, 80)">
+      <!-- Linha principal de teclas -->
+      <rect id="key-a" x="0" y="0" width="50" height="50" class="key"/>
+      <text id="label-a" x="25" y="32" class="label" text-anchor="middle">A</text>
+
+      <rect id="key-s" x="60" y="0" width="50" height="50" class="key"/>
+      <text id="label-s" x="85" y="32" class="label" text-anchor="middle">S</text>
+
+      <rect id="key-d" x="120" y="0" width="50" height="50" class="key"/>
+      <text id="label-d" x="145" y="32" class="label" text-anchor="middle">D</text>
+
+      <rect id="key-f" x="180" y="0" width="50" height="50" class="key"/>
+      <text id="label-f" x="205" y="32" class="label" text-anchor="middle">F</text>
+
+      <rect id="key-g" x="240" y="0" width="50" height="50" class="key"/>
+      <text id="label-g" x="265" y="32" class="label" text-anchor="middle">G</text>
+
+      <rect id="key-h" x="300" y="0" width="50" height="50" class="key"/>
+      <text id="label-h" x="325" y="32" class="label" text-anchor="middle">H</text>
+
+      <rect id="key-j" x="360" y="0" width="50" height="50" class="key"/>
+      <text id="label-j" x="385" y="32" class="label" text-anchor="middle">J</text>
+
+      <rect id="key-k" x="420" y="0" width="50" height="50" class="key"/>
+      <text id="label-k" x="445" y="32" class="label" text-anchor="middle">K</text>
+
+      <rect id="key-l" x="480" y="0" width="50" height="50" class="key"/>
+      <text id="label-l" x="505" y="32" class="label" text-anchor="middle">L</text>
+    </g>
+
+    <!-- Contornos das mãos -->
+    <!-- Mão esquerda -->
+    <g transform="translate(50, 150)">
+      <path d="M50,200 Q30,180 40,160 Q50,140 70,130 Q90,120 110,130 Q130,140 140,160 Q150,180 130,200 Q120,210 110,220 Q100,230 90,240 Q80,250 70,240 Q60,230 50,220 Z" class="hand"/>
+    </g>
+    
+    <!-- Mão direita -->
+    <g transform="translate(450, 150)">
+      <path d="M50,200 Q70,180 60,160 Q50,140 30,130 Q10,120 -10,130 Q-30,140 -40,160 Q-50,180 -30,200 Q-20,210 -10,220 Q0,230 10,240 Q20,250 30,240 Q40,230 50,220 Z" class="hand"/>
+    </g>
+
+    <!-- Dedos - Mão Esquerda -->
+    <!-- Dedo mindinho esquerdo (A) -->
+    <path id="finger-a" d="M80,280 Q85,260 90,240 Q95,220 100,200 Q105,180 110,160 Q115,150 120,140" class="finger"/>
+    
+    <!-- Dedo anelar esquerdo (S) -->
+    <path id="finger-s" d="M110,285 Q115,265 120,245 Q125,225 130,205 Q135,185 140,165 Q145,155 150,145" class="finger"/>
+    
+    <!-- Dedo médio esquerdo (D) -->
+    <path id="finger-d" d="M140,290 Q145,270 150,250 Q155,230 160,210 Q165,190 170,170 Q175,160 180,150" class="finger"/>
+    
+    <!-- Dedo indicador esquerdo (F) -->
+    <path id="finger-f" d="M170,285 Q175,265 180,245 Q185,225 190,205 Q195,185 200,165 Q205,155 210,145" class="finger"/>
+
+    <!-- Polegar esquerdo (G) -->
+    <path id="finger-g" d="M200,280 Q210,270 220,260 Q230,250 240,240 Q250,230 260,220 Q270,210 280,200" class="finger"/>
+
+    <!-- Dedos - Mão Direita -->
+    <!-- Polegar direito (H) -->
+    <path id="finger-h" d="M400,280 Q390,270 380,260 Q370,250 360,240 Q350,230 340,220 Q330,210 320,200" class="finger"/>
+    
+    <!-- Dedo indicador direito (J) -->
+    <path id="finger-j" d="M430,285 Q425,265 420,245 Q415,225 410,205 Q405,185 400,165 Q395,155 390,145" class="finger"/>
+    
+    <!-- Dedo médio direito (K) -->
+    <path id="finger-k" d="M460,290 Q455,270 450,250 Q445,230 440,210 Q435,190 430,170 Q425,160 420,150" class="finger"/>
+    
+    <!-- Dedo anelar direito (L) -->
+    <path id="finger-l" d="M490,285 Q485,265 480,245 Q475,225 470,205 Q465,185 460,165 Q455,155 450,145" class="finger"/>
+  </svg>
+</div>
+
+<script>
+  // Mapeamento de teclas para dedos
+  const keyFingerMap = {
+    'a': 'finger-a',
+    's': 'finger-s', 
+    'd': 'finger-d',
+    'f': 'finger-f',
+    'g': 'finger-g',
+    'h': 'finger-h',
+    'j': 'finger-j',
+    'k': 'finger-k',
+    'l': 'finger-l'
+  };
+
+  // Função para animar tecla pressionada
+  function pressKey(key) {
+    const keyElement = document.getElementById(`key-${key}`);
+    const labelElement = document.getElementById(`label-${key}`);
+    const fingerElement = document.getElementById(keyFingerMap[key]);
+    
+    if (keyElement && labelElement && fingerElement) {
+      keyElement.classList.add('pressed');
+      labelElement.classList.add('pressed-text');
+      fingerElement.classList.add('animate');
+    }
+  }
+
+  // Função para animar tecla liberada
+  function releaseKey(key) {
+    const keyElement = document.getElementById(`key-${key}`);
+    const labelElement = document.getElementById(`label-${key}`);
+    const fingerElement = document.getElementById(keyFingerMap[key]);
+    
+    if (keyElement && labelElement && fingerElement) {
+      keyElement.classList.remove('pressed');
+      labelElement.classList.remove('pressed-text');
+      fingerElement.classList.remove('animate');
+    }
+  }
+
+  // Event listeners para teclas pressionadas
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.toLowerCase();
+    if (keyFingerMap[key]) {
+      e.preventDefault();
+      pressKey(key);
+    }
+  });
+
+  // Event listeners para teclas liberadas
+  document.addEventListener('keyup', (e) => {
+    const key = e.key.toLowerCase();
+    if (keyFingerMap[key]) {
+      e.preventDefault();
+      releaseKey(key);
+    }
+  });
+
+  // Event listeners para cliques do mouse nas teclas
+  Object.keys(keyFingerMap).forEach(key => {
+    const keyElement = document.getElementById(`key-${key}`);
+    if (keyElement) {
+      keyElement.addEventListener('mousedown', () => pressKey(key));
+      keyElement.addEventListener('mouseup', () => releaseKey(key));
+      keyElement.addEventListener('mouseleave', () => releaseKey(key));
+      
+      // Adiciona cursor pointer para indicar que é clicável
+      keyElement.style.cursor = 'pointer';
+    }
+  });
+
+  // Previne o comportamento padrão de algumas teclas
+  document.addEventListener('keydown', (e) => {
+    if (Object.keys(keyFingerMap).includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+</body>
+</html>
